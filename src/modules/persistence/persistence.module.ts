@@ -1,7 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigType } from '@nestjs/config';
-import dbConfig from './db.config';
+import dbConfig from '../../config/db.config';
 
 @Global()
 @Module({
