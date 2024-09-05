@@ -21,7 +21,7 @@ export class UsersService {
       if (userExists)
         throw new HttpException(
           createResponse(false, 'User already exists', null),
-          HttpStatus.NOT_FOUND,
+          HttpStatus.CONFLICT,
         );
 
       const newUser = new this.userModel(user);
@@ -32,6 +32,23 @@ export class UsersService {
         createResponse(false, error.message, null),
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
+    }
+  }
+
+  async getUserByEmail(email: string): Promise<ApiResponse<User>> {
+    try {
+      const userFound = await this.userModel.findOne({ email }).exec();
+
+      if (!userFound) {
+        throw new HttpException(
+          createResponse(false, 'User not found', null),
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      return createResponse(true, 'User found', userFound);
+    } catch (error) {
+      throw error;
     }
   }
 }
