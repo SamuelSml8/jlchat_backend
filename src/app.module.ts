@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { PersistenceModule } from './modules/persistence/persistence.module';
 import dbConfig from './config/db.config';
 import { UsersModule } from './modules/users/users.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { UsersModule } from './modules/users/users.module';
     }),
     PersistenceModule,
     UsersModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
