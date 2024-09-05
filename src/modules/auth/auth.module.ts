@@ -10,6 +10,9 @@ import { HashService } from './services/hash.service';
 import { TokenService } from './services/token.service';
 import { BlackListService } from './services/black-list.service';
 import { BlackListSchema } from './schemas/black-list.schema';
+import { RolesGuard } from 'src/common/guards/roles.guard';
+import { AuthGuard } from 'src/common/guards/auth.guard';
+import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
   imports: [
@@ -29,7 +32,15 @@ import { BlackListSchema } from './schemas/black-list.schema';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, HashService, TokenService, BlackListService],
+  providers: [
+    AuthService,
+    HashService,
+    TokenService,
+    BlackListService,
+    JwtStrategy,
+    RolesGuard,
+    AuthGuard,
+  ],
   exports: [AuthService],
 })
 export class AuthModule {}
