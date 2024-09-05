@@ -23,6 +23,7 @@ import {
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { Role } from 'src/common/enums/roles.enum';
 import { Roles } from 'src/common/decorators/roles.decorator';
+import { AuthGuard } from 'src/common/guards/auth.guard';
 
 @ApiTags('Users')
 @Controller('users')
@@ -68,8 +69,7 @@ export class UsersController {
   })
   @ApiResponseDoc({ status: 404, description: 'User not found' })
   @ApiBearerAuth()
-  @Roles(Role.ADMIN)
-  @UseGuards(RolesGuard)
+  @UseGuards(AuthGuard)
   @Put('update/:id')
   async updateUser(
     @Param('id', MongoIdValidationPipe) id: string,
