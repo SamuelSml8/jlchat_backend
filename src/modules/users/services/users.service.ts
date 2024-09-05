@@ -68,4 +68,19 @@ export class UsersService {
 
     return createResponse(true, 'User deleted successfully', deletedUser);
   }
+
+  async updateRole(id: string, role: string): Promise<ApiResponse<User>> {
+    const updatedUser = await this.userModel
+      .findByIdAndUpdate(id, { role }, { new: true })
+      .exec();
+
+    if (!updatedUser) {
+      throw new HttpException(
+        createResponse(false, 'User not found', null),
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return createResponse(true, 'User role updated successfully', updatedUser);
+  }
 }
