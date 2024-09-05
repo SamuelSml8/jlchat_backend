@@ -9,6 +9,7 @@ import { HashService } from './hash.service';
 import { TokenService } from './token.service';
 import { Token } from 'src/common/types/token.type';
 import { JwtPayload } from 'src/common/types/jwt-payload.type';
+import { LoginDto } from '../dtos/Login.dto';
 
 @Injectable()
 export class AuthService {
@@ -60,5 +61,47 @@ export class AuthService {
     };
 
     return createResponse(true, 'User created successfully', token);
+  }
+
+  async login(userLogin: LoginDto): Promise<ApiResponse<Token>> {
+    const { email, password } = userLogin;
+
+    const user = await this.userModel.findOne({ email });
+
+    if (!user || !(await this.hashService.compare(password, user.password))) {
+      throw new HttpException(
+        createResponse(false, 'Email or password incorrect', null),
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    if (!user.isActive) {
+      throw new HttpException(
+        createResponse(false, 'Account is not active', null),
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    const payload: JwtPayload = {
+      sub: user._id.toString(),
+      name: user.name,
+      lastName: user.lastName,
+      email: user.email,
+      role: user.role,
+      chats: user.chats,
+      groups: user.groups,
+      friends: user.friends,
+    };
+
+    const tokenString = await this.tokenService.generateToken(payload, {
+      expiresIn: process.env.JWT_EXPIRES_IN || '1h',
+    });
+
+    const token: Token = {
+      accessToken: tokenString,
+      expiresIn: process.env.JWT_EXPIRES_IN || '1h',
+    };
+
+    return createResponse(true, 'User logged in successfully', token);
   }
 }
