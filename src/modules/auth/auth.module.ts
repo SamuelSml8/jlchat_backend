@@ -8,10 +8,15 @@ import { UserSchema } from '../users/schemas/user.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { HashService } from './services/hash.service';
 import { TokenService } from './services/token.service';
+import { BlackListService } from './services/black-list.service';
+import { BlackListSchema } from './schemas/black-list.schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
+    MongooseModule.forFeature([
+      { name: 'User', schema: UserSchema },
+      { name: 'BlackList', schema: BlackListSchema },
+    ]),
     ConfigModule.forRoot(),
     PassportModule,
     JwtModule.registerAsync({
@@ -24,7 +29,7 @@ import { TokenService } from './services/token.service';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, HashService, TokenService],
+  providers: [AuthService, HashService, TokenService, BlackListService],
   exports: [AuthService],
 })
 export class AuthModule {}
