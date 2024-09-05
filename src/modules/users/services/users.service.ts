@@ -13,78 +13,63 @@ export class UsersService {
   ) {}
 
   async createUser(user: CreateUserDto): Promise<ApiResponse<User>> {
-    try {
-      const userExists = await this.userModel
-        .findOne({ email: user.email })
-        .exec();
+    const userExists = await this.userModel
+      .findOne({ email: user.email })
+      .exec();
 
-      if (userExists)
-        throw new HttpException(
-          createResponse(false, 'User already exists', null),
-          HttpStatus.CONFLICT,
-        );
+    if (userExists)
+      throw new HttpException(
+        createResponse(false, 'User already exists', null),
+        HttpStatus.CONFLICT,
+      );
 
-      const newUser = new this.userModel(user);
-      const createdUser = await newUser.save();
-      return createResponse(true, 'User created successfully', createdUser);
-    } catch (error) {
-      throw error;
-    }
+    const newUser = new this.userModel(user);
+    const createdUser = await newUser.save();
+    return createResponse(true, 'User created successfully', createdUser);
   }
 
   async getUserByEmail(email: string): Promise<ApiResponse<User>> {
-    try {
-      const userFound = await this.userModel.findOne({ email }).exec();
+    const userFound = await this.userModel.findOne({ email }).exec();
 
-      if (!userFound) {
-        throw new HttpException(
-          createResponse(false, 'User not found', null),
-          HttpStatus.NOT_FOUND,
-        );
-      }
-
-      return createResponse(true, 'User found', userFound);
-    } catch (error) {
-      throw error;
+    if (!userFound) {
+      throw new HttpException(
+        createResponse(false, 'User not found', null),
+        HttpStatus.NOT_FOUND,
+      );
     }
+
+    return createResponse(true, 'User found', userFound);
   }
 
   async updateUser(
     id: string,
     user: UpdateUserDto,
   ): Promise<ApiResponse<User>> {
-    try {
-      const updatedUser = await this.userModel
-        .findByIdAndUpdate(id, user, { new: true })
-        .exec();
 
-      if (!updatedUser) {
-        throw new HttpException(
-          createResponse(false, 'User not found', null),
-          HttpStatus.NOT_FOUND,
-        );
-      }
+    const updatedUser = await this.userModel
+      .findByIdAndUpdate(id, user, { new: true })
+      .exec();
 
-      return createResponse(true, 'User updated successfully', updatedUser);
-    } catch (error) {
-      throw error;
+    if (!updatedUser) {
+      throw new HttpException(
+        createResponse(false, 'User not found', null),
+        HttpStatus.NOT_FOUND,
+      );
     }
+
+    return createResponse(true, 'User updated successfully', updatedUser);
   }
 
   async deleteUser(id: string): Promise<ApiResponse<User>> {
-    try {
-      const deletedUser = await this.userModel.findByIdAndDelete(id).exec();
+    const deletedUser = await this.userModel.findByIdAndDelete(id).exec();
 
-      if (!deletedUser) {
-        throw new HttpException(
-          createResponse(false, 'User not found', null),
-          HttpStatus.NOT_FOUND,
-        );
-      }
-
-      return createResponse(true, 'User deleted successfully', deletedUser);
-    } catch (error) {
-      throw error;
+    if (!deletedUser) {
+      throw new HttpException(
+        createResponse(false, 'User not found', null),
+        HttpStatus.NOT_FOUND,
+      );
     }
+
+    return createResponse(true, 'User deleted successfully', deletedUser);
   }
 }
