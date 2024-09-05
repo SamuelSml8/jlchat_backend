@@ -10,6 +10,7 @@ import { TokenService } from './token.service';
 import { Token } from 'src/common/types/token.type';
 import { JwtPayload } from 'src/common/types/jwt-payload.type';
 import { LoginDto } from '../dtos/Login.dto';
+import { BlackListService } from './black-list.service';
 
 @Injectable()
 export class AuthService {
@@ -17,6 +18,7 @@ export class AuthService {
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
     private readonly hashService: HashService,
     private readonly tokenService: TokenService,
+    private readonly blackListService: BlackListService,
   ) {}
 
   async register(user: CreateUserDto): Promise<ApiResponse<Token>> {
@@ -103,5 +105,19 @@ export class AuthService {
     };
 
     return createResponse(true, 'User logged in successfully', token);
+  }
+
+  async logout(token: Token): Promise<ApiResponse<null>> {
+    const isBlacklisted = await this.blackListService.isTokenBlackListed(token);
+    if (isBlacklisted) {
+      throw new HttpException(
+        createResponse(false, 'Token already invalidated', null),
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    await this.blackListService.addTokenToBlackList(token);
+
+    return createResponse(true, 'User logged out successfully', null);
   }
 }
