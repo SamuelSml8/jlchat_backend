@@ -9,6 +9,7 @@ import {
   ApiOperation,
   ApiResponse as ApiResponseDoc,
   ApiBody,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { FastifyRequest } from 'fastify';
@@ -91,6 +92,7 @@ export class AuthController {
   }
 
   @Post('logout')
+  @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Logout a user and invalidate the token' })
   @ApiBody({
