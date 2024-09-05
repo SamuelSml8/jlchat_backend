@@ -10,12 +10,12 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post('create')
-  async createUser(@Body() user: CreateUserDto) {
+  async createUser(@Body() user: CreateUserDto): Promise<ApiResponse<User>> {
     return await this.usersService.createUser(user);
   }
 
   @Get('getByEmail/:email')
-  async getUserByEmail(@Param('email') email: string) {
+  async getUserByEmail(@Param('email') email: string): Promise<ApiResponse<User>> {
     return await this.usersService.getUserByEmail(email);
   }
 
