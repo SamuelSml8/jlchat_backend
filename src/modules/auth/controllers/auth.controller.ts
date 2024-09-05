@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
 import { CreateUserDto } from 'src/modules/users/dtos';
 import { LoginDto } from '../dtos/Login.dto';
@@ -10,6 +10,8 @@ import {
   ApiResponse as ApiResponseDoc,
   ApiBody,
 } from '@nestjs/swagger';
+import { AuthGuard } from 'src/common/guards/auth.guard';
+import { FastifyRequest } from 'fastify';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -89,6 +91,7 @@ export class AuthController {
   }
 
   @Post('logout')
+  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Logout a user and invalidate the token' })
   @ApiBody({
     description: 'The token to be invalidated',
@@ -120,9 +123,9 @@ export class AuthController {
       },
     },
   })
-  async logout(
-    @Body() token: { accessToken: string },
-  ): Promise<ApiResponse<null>> {
+  async logout(@Req() request: FastifyRequest): Promise<ApiResponse<Token>> {
+    const tokenString = request.headers.authorization?.split(' ')[1];
+    const token: Token = { accessToken: tokenString };
     return this.authService.logout(token);
   }
 }
