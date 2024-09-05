@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { PersistenceModule } from './modules/persistence/persistence.module';
-import dbConfig from './modules/persistence/db.config';
+import dbConfig from './config/db.config';
+import { UsersModule } from './modules/users/users.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -11,6 +13,8 @@ import dbConfig from './modules/persistence/db.config';
       isGlobal: true,
     }),
     PersistenceModule,
+    UsersModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
