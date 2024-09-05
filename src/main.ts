@@ -13,7 +13,7 @@ async function bootstrap() {
     new FastifyAdapter(),
   );
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   const config = new DocumentBuilder()
     .setTitle('JL Chat API')
