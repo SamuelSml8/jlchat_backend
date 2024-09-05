@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Put,
   UseGuards,
 } from '@nestjs/common';
@@ -98,5 +99,32 @@ export class UsersController {
     @Param('id', MongoIdValidationPipe) id: string,
   ): Promise<ApiResponse<User>> {
     return await this.usersService.deleteUser(id);
+  }
+
+  @Patch('update-role/:id')
+  @ApiOperation({ summary: 'Update user role by ID' })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'ID of the user to update role',
+  })
+  @ApiBody({
+    type: String,
+    description: 'Role to update the user',
+  })
+  @ApiResponseDoc({
+    status: 200,
+    description: 'User role updated successfully',
+    type: User,
+  })
+  @ApiResponseDoc({ status: 404, description: 'User not found' })
+  @ApiBearerAuth()
+  @Roles(Role.ADMIN)
+  @UseGuards(RolesGuard)
+  async updateRole(
+    @Param('id', MongoIdValidationPipe) id: string,
+    @Body('role') role: string,
+  ): Promise<ApiResponse<User>> {
+    return await this.usersService.updateRole(id, role);
   }
 }
