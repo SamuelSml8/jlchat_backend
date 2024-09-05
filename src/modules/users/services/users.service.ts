@@ -70,4 +70,21 @@ export class UsersService {
       throw error;
     }
   }
+
+  async deleteUser(id: string): Promise<ApiResponse<User>> {
+    try {
+      const deletedUser = await this.userModel.findByIdAndDelete(id).exec();
+
+      if (!deletedUser) {
+        throw new HttpException(
+          createResponse(false, 'User not found', null),
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      return createResponse(true, 'User deleted successfully', deletedUser);
+    } catch (error) {
+      throw error;
+    }
+  }
 }
