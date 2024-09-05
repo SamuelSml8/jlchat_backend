@@ -29,7 +29,18 @@ export class UsersService {
     id: string,
     user: UpdateUserDto,
   ): Promise<ApiResponse<User>> {
-    if (user.email) {
+
+    if (user.hasOwnProperty('role')) {
+      throw new HttpException(
+        createResponse(false, 'Cannot update role', null),
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const updateFields = { ...user };
+    delete updateFields['role'];
+
+    if (updateFields.email) {
       const existingUser = await this.userModel
         .findOne({ email: user.email })
         .exec();
@@ -43,7 +54,7 @@ export class UsersService {
     }
 
     const updatedUser = await this.userModel
-      .findByIdAndUpdate(id, user, { new: true })
+      .findByIdAndUpdate(id, updateFields, { new: true })
       .exec();
 
     if (!updatedUser) {
