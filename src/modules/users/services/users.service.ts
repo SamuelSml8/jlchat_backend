@@ -45,6 +45,18 @@ export class UsersService {
     id: string,
     user: UpdateUserDto,
   ): Promise<ApiResponse<User>> {
+    if (user.email) {
+      const existingUser = await this.userModel
+        .findOne({ email: user.email })
+        .exec();
+
+      if (existingUser && existingUser.id !== id) {
+        throw new HttpException(
+          createResponse(false, 'Email already in use', null),
+          HttpStatus.CONFLICT,
+        );
+      }
+    }
 
     const updatedUser = await this.userModel
       .findByIdAndUpdate(id, user, { new: true })
