@@ -28,10 +28,7 @@ export class UsersService {
       const createdUser = await newUser.save();
       return createResponse(true, 'User created successfully', createdUser);
     } catch (error) {
-      throw new HttpException(
-        createResponse(false, error.message, null),
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw error;
     }
   }
 
