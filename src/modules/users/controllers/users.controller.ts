@@ -1,16 +1,28 @@
-import { Body, Controller, Delete, Get, Param, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { UsersService } from '../services/users.service';
 import { UpdateUserDto } from '../dtos';
 import { MongoIdValidationPipe } from 'src/common/pipes/mongo-id-validation.pipe';
 import { ApiResponse } from 'src/shared/interfaces/response.interface';
 import { User } from '../schemas/user.schema';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiOperation,
   ApiParam,
   ApiResponse as ApiResponseDoc,
   ApiTags,
 } from '@nestjs/swagger';
+import { RolesGuard } from 'src/common/guards/roles.guard';
+import { Role } from 'src/common/enums/roles.enum';
+import { Roles } from 'src/common/decorators/roles.decorator';
 
 @ApiTags('Users')
 @Controller('users')
@@ -29,6 +41,9 @@ export class UsersController {
     type: User,
   })
   @ApiResponseDoc({ status: 404, description: 'User not found' })
+  @ApiBearerAuth()
+  @Roles(Role.ADMIN)
+  @UseGuards(RolesGuard)
   @Get('getByEmail/:email')
   async getUserByEmail(
     @Param('email') email: string,
@@ -52,6 +67,9 @@ export class UsersController {
     type: User,
   })
   @ApiResponseDoc({ status: 404, description: 'User not found' })
+  @ApiBearerAuth()
+  @Roles(Role.ADMIN)
+  @UseGuards(RolesGuard)
   @Put('update/:id')
   async updateUser(
     @Param('id', MongoIdValidationPipe) id: string,
@@ -72,6 +90,9 @@ export class UsersController {
     type: User,
   })
   @ApiResponseDoc({ status: 404, description: 'User not found' })
+  @ApiBearerAuth()
+  @Roles(Role.ADMIN)
+  @UseGuards(RolesGuard)
   @Delete('delete/:id')
   async deleteUser(
     @Param('id', MongoIdValidationPipe) id: string,
