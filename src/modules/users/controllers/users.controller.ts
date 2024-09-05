@@ -1,14 +1,6 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Put } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
-import { CreateUserDto, UpdateUserDto } from '../dtos';
+import { UpdateUserDto } from '../dtos';
 import { MongoIdValidationPipe } from 'src/common/pipes/mongo-id-validation.pipe';
 import { ApiResponse } from 'src/shared/interfaces/response.interface';
 import { User } from '../schemas/user.schema';
@@ -24,19 +16,6 @@ import {
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-
-  @ApiOperation({ summary: 'Create a new user' })
-  @ApiBody({ type: CreateUserDto, description: 'Data for creating a new user' })
-  @ApiResponseDoc({
-    status: 201,
-    description: 'User created successfully',
-    type: User,
-  })
-  @ApiResponseDoc({ status: 409, description: 'User already exists' })
-  @Post('create')
-  async createUser(@Body() user: CreateUserDto): Promise<ApiResponse<User>> {
-    return await this.usersService.createUser(user);
-  }
 
   @ApiOperation({ summary: 'Get user by email' })
   @ApiParam({
