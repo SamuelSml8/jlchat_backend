@@ -54,12 +54,12 @@ export class AuthService {
     };
 
     const tokenString = await this.tokenService.generateToken(payload, {
-      expiresIn: '1h',
+      expiresIn: process.env.JWT_EXPIRES_IN || '1h',
     });
 
     const token: Token = {
       accessToken: tokenString,
-      expiresIn: '1h',
+      expiresIn: process.env.JWT_EXPIRES_IN || '1h',
     };
 
     return createResponse(true, 'User created successfully', token);
@@ -107,17 +107,8 @@ export class AuthService {
     return createResponse(true, 'User logged in successfully', token);
   }
 
-  async logout(token: Token): Promise<ApiResponse<null>> {
-    const isBlacklisted = await this.blackListService.isTokenBlackListed(token);
-    if (isBlacklisted) {
-      throw new HttpException(
-        createResponse(false, 'Token already invalidated', null),
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
+  async logout(token: Token): Promise<ApiResponse<Token>> {
     await this.blackListService.addTokenToBlackList(token);
-
-    return createResponse(true, 'User logged out successfully', null);
+    return createResponse(true, 'Logout successful. Token invalidated.', token);
   }
 }
