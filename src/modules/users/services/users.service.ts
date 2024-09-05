@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from '../schemas/user.schema';
 import { Model } from 'mongoose';
-import { CreateUserDto } from '../dtos';
+import { CreateUserDto, UpdateUserDto } from '../dtos';
 import { ApiResponse } from 'src/shared/interfaces/response.interface';
 import { createResponse } from 'src/shared/utils/response.util';
 
@@ -44,6 +44,28 @@ export class UsersService {
       }
 
       return createResponse(true, 'User found', userFound);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async updateUser(
+    id: string,
+    user: UpdateUserDto,
+  ): Promise<ApiResponse<User>> {
+    try {
+      const updatedUser = await this.userModel
+        .findByIdAndUpdate(id, user, { new: true })
+        .exec();
+
+      if (!updatedUser) {
+        throw new HttpException(
+          createResponse(false, 'User not found', null),
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      return createResponse(true, 'User updated successfully', updatedUser);
     } catch (error) {
       throw error;
     }
