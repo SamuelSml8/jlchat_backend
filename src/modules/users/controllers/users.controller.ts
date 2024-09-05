@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { UsersService } from '../services/users.service';
 import { CreateUserDto, UpdateUserDto } from '../dtos';
 import { MongoIdValidationPipe } from 'src/common/pipes/mongo-id-validation.pipe';
@@ -15,7 +23,9 @@ export class UsersController {
   }
 
   @Get('getByEmail/:email')
-  async getUserByEmail(@Param('email') email: string): Promise<ApiResponse<User>> {
+  async getUserByEmail(
+    @Param('email') email: string,
+  ): Promise<ApiResponse<User>> {
     return await this.usersService.getUserByEmail(email);
   }
 
@@ -25,5 +35,12 @@ export class UsersController {
     @Body() user: UpdateUserDto,
   ): Promise<ApiResponse<User>> {
     return await this.usersService.updateUser(id, user);
+  }
+
+  @Delete('delete/:id')
+  async deleteUser(
+    @Param('id', MongoIdValidationPipe) id: string,
+  ): Promise<ApiResponse<User>> {
+    return await this.usersService.deleteUser(id);
   }
 }
