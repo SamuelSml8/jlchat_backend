@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Patch,
+  Post,
   Put,
   UseGuards,
 } from '@nestjs/common';
@@ -25,6 +26,7 @@ import { RolesGuard } from 'src/common/guards/roles.guard';
 import { Role } from 'src/common/enums/roles.enum';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { AuthGuard } from 'src/common/guards/auth.guard';
+import { AddFriendDto } from '../dtos/add-friend.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -145,5 +147,26 @@ export class UsersController {
   @Get('findByName/:name')
   async findByName(@Param('name') name: string): Promise<ApiResponse<User[]>> {
     return await this.usersService.findByName(name);
+  }
+
+  @ApiOperation({ summary: 'Add friend' })
+  @ApiBody({
+    type: AddFriendDto,
+    description: 'Data to add a friend',
+  })
+  @ApiResponseDoc({
+    status: 200,
+    description: 'Friend added successfully',
+    type: User,
+  })
+  @ApiResponseDoc({ status: 404, description: 'User not found' })
+  @ApiResponseDoc({ status: 409, description: 'User is already a friend' })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  @Post('add-friend')
+  async addFriend(
+    @Body() addFriendDto: AddFriendDto,
+  ): Promise<ApiResponse<User>> {
+    return await this.usersService.addFriend(addFriendDto);
   }
 }
