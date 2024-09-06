@@ -111,4 +111,8 @@ export class AuthService {
     await this.blackListService.addTokenToBlackList(token);
     return createResponse(true, 'Logout successful. Token invalidated.', token);
   }
+
+  async validateToken(): Promise<ApiResponse<Token>> {
+    return createResponse(true, 'Token is valid', null);
+  }
 }
