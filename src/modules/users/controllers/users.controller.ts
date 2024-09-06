@@ -127,4 +127,23 @@ export class UsersController {
   ): Promise<ApiResponse<User>> {
     return await this.usersService.updateRole(id, role);
   }
+
+  @ApiOperation({ summary: 'Get user by name' })
+  @ApiParam({
+    name: 'name',
+    type: String,
+    description: 'Name of the user',
+  })
+  @ApiResponseDoc({
+    status: 200,
+    description: 'User found successfully',
+    type: User,
+  })
+  @ApiResponseDoc({ status: 404, description: 'User not found' })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  @Get('findByName/:name')
+  async findByName(@Param('name') name: string): Promise<ApiResponse<User[]>> {
+    return await this.usersService.findByName(name);
+  }
 }
