@@ -190,4 +190,17 @@ export class UsersController {
   ): Promise<ApiResponse<User[]>> {
     return await this.usersService.getAllUserFriends(userId);
   }
+
+  @Get(':id')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Get user by ID' })
+  @ApiResponseDoc({ status: 200, description: 'User found' })
+  @ApiResponseDoc({ status: 401, description: 'Unauthorized' })
+  @ApiResponseDoc({ status: 403, description: 'Forbidden' })
+  @ApiResponseDoc({ status: 404, description: 'User not found' })
+  @ApiResponseDoc({ status: 500, description: 'Internal Server Error' })
+  async getUserById(@Param('id', MongoIdValidationPipe) id: string) {
+    return await this.usersService.getUserById(id);
+  }
 }
