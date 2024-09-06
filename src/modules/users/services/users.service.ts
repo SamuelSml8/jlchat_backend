@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { UpdateUserDto } from '../dtos';
 import { ApiResponse } from 'src/shared/interfaces/response.interface';
 import { createResponse } from 'src/shared/utils/response.util';
+import { AddFriendDto } from '../dtos/add-friend.dto';
 
 @Injectable()
 export class UsersService {
@@ -107,5 +108,31 @@ export class UsersService {
     }
 
     return createResponse(true, 'Users found', users);
+  }
+
+  async addFriend(addFriend: AddFriendDto): Promise<ApiResponse<User>> {
+    const { userId, friendId } = addFriend;
+
+    const user = await this.userModel.findById(userId).exec();
+    const friend = await this.userModel.findById(friendId).exec();
+
+    if (!user || !friend) {
+      throw new HttpException(
+        createResponse(false, 'User not found', null),
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const isFriend = user.friends.includes(friendId);
+    if (isFriend) {
+      throw new HttpException(
+        createResponse(false, 'User is already a friend', null),
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    user.friends.push(friendId);
+    await user.save();
+    return createResponse(true, 'Friend added successfully', user);
   }
 }
