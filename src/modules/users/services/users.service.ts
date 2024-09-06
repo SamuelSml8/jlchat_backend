@@ -152,4 +152,17 @@ export class UsersService {
 
     return createResponse(true, 'Friends found', friends);
   }
+
+  async getUserById(id: string): Promise<ApiResponse<User>> {
+    const user = await this.userModel.findById(id).exec();
+
+    if (!user) {
+      throw new HttpException(
+        createResponse(false, 'User not found', null),
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return createResponse(true, 'User found', user);
+  }
 }
