@@ -29,7 +29,6 @@ export class UsersService {
     id: string,
     user: UpdateUserDto,
   ): Promise<ApiResponse<User>> {
-
     if (user.hasOwnProperty('role')) {
       throw new HttpException(
         createResponse(false, 'Cannot update role', null),
@@ -93,5 +92,20 @@ export class UsersService {
     }
 
     return createResponse(true, 'User role updated successfully', updatedUser);
+  }
+
+  async findByName(name: string): Promise<ApiResponse<User[]>> {
+    const users = await this.userModel
+      .find({ name: { $regex: name, $options: 'i' } })
+      .exec();
+
+    if (!users || users.length === 0) {
+      throw new HttpException(
+        createResponse(false, 'Users not found', null),
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return createResponse(true, 'Users found', users);
   }
 }
