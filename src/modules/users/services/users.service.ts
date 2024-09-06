@@ -135,4 +135,21 @@ export class UsersService {
     await user.save();
     return createResponse(true, 'Friend added successfully', user);
   }
+
+  async getAllUserFriends(userId: string): Promise<ApiResponse<User[]>> {
+    const user = await this.userModel.findById(userId).exec();
+
+    if (!user) {
+      throw new HttpException(
+        createResponse(false, 'User not found', null),
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const friends = await this.userModel
+      .find({ _id: { $in: user.friends } })
+      .exec();
+
+    return createResponse(true, 'Friends found', friends);
+  }
 }
