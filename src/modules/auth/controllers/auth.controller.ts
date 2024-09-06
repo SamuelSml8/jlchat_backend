@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
 import { CreateUserDto } from 'src/modules/users/dtos';
 import { LoginDto } from '../dtos/Login.dto';
@@ -13,6 +13,7 @@ import {
 } from '@nestjs/swagger';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { FastifyRequest } from 'fastify';
+import { create } from 'domain';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -129,5 +130,24 @@ export class AuthController {
     const tokenString = request.headers.authorization?.split(' ')[1];
     const token: Token = { accessToken: tokenString };
     return this.authService.logout(token);
+  }
+
+  @Get('validate-token')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Validate the token' })
+  @ApiResponseDoc({
+    status: 200,
+    description: 'Token is valid',
+    schema: {
+      example: {
+        success: true,
+        message: 'Token is valid',
+        data: null,
+      },
+    },
+  })
+  async validateToken(): Promise<ApiResponse<Token>> {
+    return this.authService.validateToken();
   }
 }
