@@ -169,4 +169,25 @@ export class UsersController {
   ): Promise<ApiResponse<User>> {
     return await this.usersService.addFriend(addFriendDto);
   }
+
+  @ApiOperation({ summary: 'Get all user friends' })
+  @ApiParam({
+    name: 'userId',
+    type: String,
+    description: 'ID of the user to get all friends',
+  })
+  @ApiResponseDoc({
+    status: 200,
+    description: 'Friends found successfully',
+    type: User,
+  })
+  @ApiResponseDoc({ status: 404, description: 'User not found' })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  @Get('getAllUserFriends/:userId')
+  async getAllUserFriends(
+    @Param('userId', MongoIdValidationPipe) userId: string,
+  ): Promise<ApiResponse<User[]>> {
+    return await this.usersService.getAllUserFriends(userId);
+  }
 }
