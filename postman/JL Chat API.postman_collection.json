@@ -1,0 +1,283 @@
+{
+	"info": {
+		"_postman_id": "7fb7e0aa-b9ac-4bec-8887-d7c4e8eb8100",
+		"name": "JL Chat API",
+		"description": "The **JL Chat API** collection includes the necessary endpoints to interact with a chat application that offers functionalities such as user management, secure authentication, and real-time messaging both individually and in groups. The API is structured using **NestJS** as a backend framework and **MongoDB** for data storage, ensuring a robust and scalable architecture. In addition, it includes security validations and JWT token handling, ensuring that communication between the client and server is reliable. The API is organized in three main areas: **Users**, **Authentication**, and **Chat**.\n\nThis collection uses two Postman variables at the collection level:\n\n- **URL_BASE**: `http://localhost`\n    \n- **PORT**: `3000`\n    \n\nThese variables simplify requests by defining the base URL and port, allowing easy configuration when running the API on different environments.\n\n**API developed by Samuel Vera Miranda as part of the Jlcoders technical test. 🚀**",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "27402576"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get user by email",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{URL_BASE}}{{PORT}}/users/getByEmail/veramirandasamuel6@gmail.com"
+					},
+					"response": []
+				},
+				{
+					"name": "Find users by name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{URL_BASE}}{{PORT}}/users/findByName/sa"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all user friends",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{URL_BASE}}{{PORT}}/users/getAllUserFriends/66d9e74fd446b2ed2f21fd41"
+					},
+					"response": []
+				},
+				{
+					"name": "Get user by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{URL_BASE}}{{PORT}}/users/66d9e74fd446b2ed2f21fd41"
+					},
+					"response": []
+				},
+				{
+					"name": "Add friend",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"friendId\": \"66d9e74fd446b2ed2f21fd41\",\r\n    \"userId\": \"66da20d12646bd916542d8ad\"\r\n}\r\n\r\n// Este endpoint no se utilizó, no fue borrado por temas de prueba técnica",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{URL_BASE}}{{PORT}}/users/add-friend"
+					},
+					"response": []
+				},
+				{
+					"name": "Update user",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"samuel\",\r\n    \"lastName\": \"sml\"\r\n}\r\n\r\n// Pasa los campos que desees actualizar",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{URL_BASE}}{{PORT}}/users/update/66d9e74fd446b2ed2f21fd41"
+					},
+					"response": []
+				},
+				{
+					"name": "Update role",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"role\": \"admin\"\r\n}\r\n\r\n// Solo un usuario con rol admin puede actualizar el rol de otro usuario",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{URL_BASE}}{{PORT}}/users/update-role/66d9c541beb821e8750a00b4"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{URL_BASE}}{{PORT}}/users/delete/66d91b71fa808a8cd44c13f9"
+					},
+					"response": []
+				}
+			],
+			"description": "The endpoints in this folder allow you to manage user-related operations, such as retrieving users by their email, name, or ID, updating user information, adding friends, and managing user roles. These endpoints are essential for handling user data within the chat application.\n\n### **Users Endpoints**\n\n1. **`GET /users/getByEmail/:email`**  \n    Retrieves a user by their email address.\n    \n2. **`GET /users/findByName/:name`**  \n    Fetches users by their name.\n    \n3. **`GET /users/getAllUserFriends/:userId`**  \n    Retrieves a list of all friends of a specific user by their ID.\n    \n4. **`GET /users/:id`**  \n    Fetches user details by their ID.\n    \n5. **`POST /users/add-friend`**  \n    Adds a friend to the user's friend list.\n    \n6. **`PUT /users/update/:id`**  \n    Updates user information by their ID.\n    \n7. **`PATCH /users/update-role/:id`**  \n    Updates the role of a user by their ID.\n    \n8. **`DELETE /users/delete/:id`**  \n    Deletes a user by their ID."
+		},
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Jose\",\r\n    \"lastName\": \"Trujillo\",\r\n    \"email\": \"jose@mail.com\",\r\n    \"password\": \"12345678\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{URL_BASE}}{{PORT}}/auth/register"
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"jose@mail.com\",\r\n    \"password\": \"12345678\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{URL_BASE}}{{PORT}}/auth/login"
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{URL_BASE}}{{PORT}}/auth/logout"
+					},
+					"response": []
+				},
+				{
+					"name": "Validate token",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{URL_BASE}}{{PORT}}/auth/validate-token"
+					},
+					"response": []
+				}
+			],
+			"description": "This folder contains endpoints that manage user authentication processes, including registration, login, logout, and token validation. The endpoints ensure secure access to the application through JWT-based authentication, safeguarding user data and session integrity.\n\n### **Authentication Endpoints**\n\n1. **`POST /auth/register`**  \n    Registers a new user.\n    \n2. **`POST /auth/login`**  \n    Authenticates a user and generates a JWT token for session management.\n    \n3. **`POST /auth/logout`**  \n    Logs a user out and invalidates the token.\n    \n4. **`GET /auth/validate-token`**  \n    Validates the JWT token to check if it’s still active and authentic."
+		},
+		{
+			"name": "Chat",
+			"item": [
+				{
+					"name": "Get all user chats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{URL_BASE}}{{PORT}}/chats/user-chats"
+					},
+					"response": []
+				},
+				{
+					"name": "Get messages by chat",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{URL_BASE}}{{PORT}}/chats/chat-messages/66da888305d4d2c4168f9f17"
+					},
+					"response": []
+				},
+				{
+					"name": "Create group",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Familia\",\r\n    \"members\": [\r\n        \"66da20d12646bd916542d8ad\",\r\n        \"66d9e74fd446b2ed2f21fd41\"\r\n    ]\r\n}\r\n\r\n// Se agrega también el usuario que creó el grupo, se extrae el id del token",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{URL_BASE}}{{PORT}}/chats/create-group"
+					},
+					"response": []
+				},
+				{
+					"name": "Add friend",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"66d9e74fd446b2ed2f21fd41\",\r\n    \"friendId\": \"66da20d12646bd916542d8ad\"\r\n}\r\n\r\n// Este endpoint es el que se utiliza para agregar amigos a tu cuenta",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{URL_BASE}}{{PORT}}/chats/add-friend"
+					},
+					"response": []
+				}
+			],
+			"description": "The chat endpoints handle the core messaging functionalities, including retrieving user chats, fetching messages within a chat, and creating group chats. This set of endpoints also supports real-time communication between users, whether in individual conversations or group settings.\n\n### **Chat Endpoints**\n\n1. **`GET /chats/user-chats`**  \n    Retrieves a list of chats that the authenticated user is a part of.\n    \n2. **`GET /chats/chat-messages/:chatId`**  \n    Fetches all messages within a specific chat by its ID.\n    \n3. **`POST /chats/create-group`**  \n    Creates a new group chat.\n    \n4. **`POST /chats/add-friend`**  \n    Adds a friend to a specific chat."
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": {
+			"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NmRiNWUzYzc2NDZkMWQzMDM0YWE1M2UiLCJuYW1lIjoicGF1bGEiLCJsYXN0TmFtZSI6Im1hcsOtbiIsImVtYWlsIjoicGF1bGFAbWFpbC5jb20iLCJyb2xlIjoidXNlciIsImNoYXRzIjpbXSwiZ3JvdXBzIjpbXSwiZnJpZW5kcyI6WyI2NmRiNWU2ZDc2NDZkMWQzMDM0YWE1NjMiLCI2NmQ5ZTc0ZmQ0NDZiMmVkMmYyMWZkNDEiLCI2NmRiNjA3NTc2NDZkMWQzMDM0YWE1OGEiLCI2NmRhMjBkMTI2NDZiZDkxNjU0MmQ4YWQiLCI2NmRiNjFhNjc2NDZkMWQzMDM0YWE1ZDAiLCI2NmRhMmU5MjI2NDZiZDkxNjU0MmQ4YzciLCI2NmRiNjdjZjc2NDZkMWQzMDM0YWE2NjYiLCI2NmQ5YzU0MWJlYjgyMWU4NzUwYTAwYjQiXSwiaWF0IjoxNzI1NjU4OTY5LCJleHAiOjE3MjU3NDUzNjl9.rjv3mqKpIiOOgJ8JGK23fY-Nbh5fnv2Wt2qGnTjtPqY"
+		}
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "URL_BASE",
+			"value": "http://localhost:"
+		},
+		{
+			"key": "PORT",
+			"value": "3000"
+		}
+	]
+}
