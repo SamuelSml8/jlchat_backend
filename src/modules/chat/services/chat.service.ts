@@ -62,7 +62,7 @@ export class ChatService {
   ): Promise<Chat> {
     const group = new this.chatModel({
       name: createGroup.name,
-      members: [createGroup.members, adminGroup],
+      members: [...createGroup.members, adminGroup],
       isGroup: true,
     });
 
